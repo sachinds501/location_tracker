@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "85161522872",
+    "firebase_url": "https://location-tracker-cc6d0-default-rtdb.firebaseio.com",
+    "project_id": "location-tracker-cc6d0",
+    "storage_bucket": "location-tracker-cc6d0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:85161522872:android:39b547035be6ece58fa64d",
+        "android_client_info": {
+          "package_name": "com.example.location_tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "85161522872-bn94uu0juhv9j2d2kqjvj7tne79ubpnl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.location_tracker",
+            "certificate_hash": "2de192eb709ea23cbd85ec93029cc0fa09d5b9cb"
+          }
+        },
+        {
+          "client_id": "85161522872-26l95qg5tn3p03ajvk8hg774nkuvq6i1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-aNopEHGBua-qEyTzJGJqUFVdtc6ydgc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "85161522872-26l95qg5tn3p03ajvk8hg774nkuvq6i1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
