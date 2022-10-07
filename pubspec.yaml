@@ -38,6 +38,8 @@ dependencies:
   cloud_firestore: ^3.4.5
   firebase_core: ^1.6.0
   permission_handler: ^10.0.0
+  firebase_auth: ^3.11.2
+  pinput: ^2.2.15
 
 dev_dependencies:
   flutter_test:

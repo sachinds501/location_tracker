@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, non_constant_identifier_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -5,7 +7,7 @@ import 'package:location/location.dart' as loc;
 
 class MyMap extends StatefulWidget {
   final String user_id;
-  MyMap(this.user_id);
+  const MyMap(this.user_id, {super.key});
   @override
   _MyMapState createState() => _MyMapState();
 }
@@ -36,7 +38,7 @@ class _MyMapState extends State<MyMap> {
                   snapshot.data!.docs.singleWhere(
                       (element) => element.id == widget.user_id)['longitude'],
                 ),
-                markerId: MarkerId('id'),
+                markerId: const MarkerId('id'),
                 icon: BitmapDescriptor.defaultMarkerWithHue(
                     BitmapDescriptor.hueMagenta)),
           },

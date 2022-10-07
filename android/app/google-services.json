@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "85161522872-bn94uu0juhv9j2d2kqjvj7tne79ubpnl.apps.googleusercontent.com",
+          "client_id": "85161522872-udrdfq1un4tvm6sf4sgdbt9hef9c1g87.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.location_tracker",
-            "certificate_hash": "2de192eb709ea23cbd85ec93029cc0fa09d5b9cb"
+            "certificate_hash": "3326dd804f3117c72c9a1999904885406bc2160a"
           }
         },
         {
