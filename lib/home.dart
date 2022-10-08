@@ -6,11 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:location/location.dart' as loc;
 import 'package:flutter/material.dart';
-import 'package:location_tracker/mymap.dart';
-import 'package:permission_handler/permission_handler.dart';
 
+import 'auth/login.dart';
 import 'drawer/drawer.dart';
-import 'login.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -24,15 +22,17 @@ class _HomeState extends State<Home> {
   StreamSubscription<loc.LocationData>? _locationSubscription;
   String? uid;
   String? phone;
+  String? name;
 
   @override
   void initState() {
     super.initState();
     uid = FirebaseAuth.instance.currentUser!.uid;
     phone = FirebaseAuth.instance.currentUser!.phoneNumber;
-    _requestPermission();
+    
     location.changeSettings(interval: 300, accuracy: loc.LocationAccuracy.high);
     location.enableBackgroundMode(enable: true);
+    _getdata();
   }
 
   @override
@@ -56,15 +56,15 @@ class _HomeState extends State<Home> {
           ]),
       body: Column(
         children: [
-          TextButton(
-              onPressed: () {
-                _getLocation();
-              },
-              child: Text('Add my location',
-                  style: TextStyle(
-                      color: Colors.blue[600],
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold))),
+          // TextButton(
+          //     onPressed: () {
+          //       _getLocation();
+          //     },
+          //     child: Text('Add my location',
+          //         style: TextStyle(
+          //             color: Colors.blue[600],
+          //             fontSize: 18,
+          //             fontWeight: FontWeight.bold))),
           TextButton(
               onPressed: () {
                 _listenLocation();
@@ -103,27 +103,28 @@ class _HomeState extends State<Home> {
                         tileColor: Colors.grey[200],
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(8))),
-                        title: Text(
-                            "${snapshot.data!.docs[index]['name']} - ${snapshot.data!.docs[index]['phone']}",
+                        title: Text("$name - $phone",
                             style: const TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold)),
                         subtitle: Row(
                           children: [
-                            Text(snapshot.data!.docs[index]['latitude']
+                            Text(snapshot.data!.docs[index]
+                                .get('latitude')
                                 .toString()),
                             const SizedBox(
                               width: 20,
                             ),
-                            Text(snapshot.data!.docs[index]['longitude']
+                            Text(snapshot.data!.docs[index]
+                                .get('longitude')
                                 .toString()),
                           ],
                         ),
                         trailing: IconButton(
                           icon: const Icon(Icons.directions),
                           onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    MyMap(snapshot.data!.docs[index].id)));
+                            // Navigator.of(context).push(MaterialPageRoute(
+                            //     builder: (context) =>
+                            //         MyMap(snapshot.data!.docs[index].id)));
                           },
                         ),
                       ),
@@ -136,21 +137,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-  _getLocation() async {
-    try {
-      final loc.LocationData locationResult = await location.getLocation();
-      await FirebaseFirestore.instance.collection('location').doc(uid).set({
-        'latitude': locationResult.latitude,
-        'longitude': locationResult.longitude,
-        'name': 'Krishna',
-        'phone': phone,
-      }, SetOptions(merge: true));
-    } catch (e) {
-      // ignore: avoid_print
-      print(e);
-    }
-  }
-
   Future<void> _listenLocation() async {
     _locationSubscription = location.onLocationChanged.handleError((onError) {
       _locationSubscription?.cancel();
@@ -161,8 +147,6 @@ class _HomeState extends State<Home> {
       await FirebaseFirestore.instance.collection('location').doc(uid).set({
         'latitude': currentlocation.latitude,
         'longitude': currentlocation.longitude,
-        'name': 'Krishna',
-        'phone': phone,
       }, SetOptions(merge: true));
     });
   }
@@ -174,14 +158,20 @@ class _HomeState extends State<Home> {
     });
   }
 
-  _requestPermission() async {
-    var status = await Permission.location.request();
-    if (status.isGranted) {
-      // print('done');
-    } else if (status.isDenied) {
-      _requestPermission();
-    } else if (status.isPermanentlyDenied) {
-      openAppSettings();
-    }
+ 
+
+  void _getdata() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    FirebaseFirestore.instance
+        .collection('location')
+        .doc(user?.uid)
+        .snapshots()
+        .listen((userData) {
+      if (this.mounted) {
+        setState(() {
+          name = userData.data()?['name'];
+        });
+      }
+    });
   }
 }

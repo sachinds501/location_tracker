@@ -2,9 +2,11 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:location_tracker/otp.dart';
+import 'package:location_tracker/auth/setdetails.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-import 'home.dart';
+import '../home.dart';
+import 'otp.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,6 +17,13 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _requestPermission();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Something Went Wrong'));
           } else if (snapshot.hasData) {
-            return Home();
+            return SetDetails();
           } else {
             return SafeArea(
               child: Padding(
@@ -115,5 +124,16 @@ class _LoginScreenState extends State<LoginScreen> {
         },
       ),
     );
+  }
+
+  _requestPermission() async {
+    var status = await Permission.location.request();
+    if (status.isGranted) {
+      // print('done');
+    } else if (status.isDenied) {
+      _requestPermission();
+    } else if (status.isPermanentlyDenied) {
+      openAppSettings();
+    }
   }
 }

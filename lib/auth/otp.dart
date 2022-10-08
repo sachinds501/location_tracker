@@ -2,9 +2,8 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:location_tracker/auth/setdetails.dart';
 import 'package:pinput/pinput.dart';
-
-import 'home.dart';
 
 class OTPScreen extends StatefulWidget {
   final String phone;
@@ -17,6 +16,7 @@ class _OTPScreenState extends State<OTPScreen> {
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
   String? _verificationCode;
   final TextEditingController _pinPutController = TextEditingController();
+  bool _buttonEnabled = false;
 
   final defaultPinTheme = PinTheme(
     width: 56,
@@ -51,31 +51,61 @@ class _OTPScreenState extends State<OTPScreen> {
           ),
           Padding(
             padding: const EdgeInsets.all(30.0),
-            child: Pinput(
-              length: 6,
-              defaultPinTheme: defaultPinTheme,
-              controller: _pinPutController,
-              pinAnimationType: PinAnimationType.fade,
-              onSubmitted: (pin) async {
-                try {
-                  await FirebaseAuth.instance
-                      .signInWithCredential(PhoneAuthProvider.credential(
-                          verificationId: _verificationCode!, smsCode: pin))
-                      .then((value) async {
-                    if (value.user != null) {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => const Home()),
-                          (route) => false);
+            child: Column(
+              children: [
+                Pinput(
+                  length: 6,
+                  defaultPinTheme: defaultPinTheme,
+                  controller: _pinPutController,
+                  pinAnimationType: PinAnimationType.fade,
+                  onSubmitted: (pin) async {
+                    try {
+                      await FirebaseAuth.instance
+                          .signInWithCredential(PhoneAuthProvider.credential(
+                              verificationId: _verificationCode!, smsCode: pin))
+                          .then((value) async {
+                        if (value.user != null) {
+                          _buttonEnabled = true;
+                          setState(() {});
+                        }
+                      });
+                    } catch (e) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(e.toString())));
                     }
-                  });
-                } catch (e) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(e.toString())));
-                }
-              },
+                  },
+                ),
+              ],
             ),
-          )
+          ),
+          if (_buttonEnabled == true)
+            Container(
+              alignment: Alignment.center,
+              child: SizedBox(
+                width: 100,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                      const Color.fromARGB(255, 86, 96, 100),
+                    ),
+                    shape: MaterialStateProperty.all(
+                      const StadiumBorder(),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SetDetails()),
+                        (route) => false);
+                  },
+                  child: const Text(
+                    'Verify',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ),
+            )
         ],
       ),
     );
@@ -91,7 +121,7 @@ class _OTPScreenState extends State<OTPScreen> {
             if (value.user != null) {
               Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const Home()),
+                  MaterialPageRoute(builder: (context) => const SetDetails()),
                   (route) => false);
             }
           });
@@ -115,6 +145,7 @@ class _OTPScreenState extends State<OTPScreen> {
   @override
   void initState() {
     super.initState();
+    _buttonEnabled == false;
     _verifyPhone();
   }
 }

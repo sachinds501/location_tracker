@@ -12,15 +12,13 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
-  TextEditingController _nameController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   String? name;
-  bool _edit = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    _edit = false;
     _getdata();
   }
 
@@ -109,7 +107,7 @@ class _UserProfileState extends State<UserProfile> {
                                           onPressed: () {
                                             _formKey.currentState!.save();
                                             updateUser();
-                                            _getdata();
+                                            // _getdata();
                                           },
                                           child: Text(
                                             'Save',
@@ -141,13 +139,13 @@ class _UserProfileState extends State<UserProfile> {
     return currentUser
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .update({'name': _nameController.text})
-        .then((value) => ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('User updated'))))
-        .catchError((error) => ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                duration: Duration(seconds: 1),
-                content: Text('User not updated $error'))));
+        .then((value) => print('user updated'))
+        .catchError((error) => print('User not updated $error'));
   }
+
+  // Future<void> _addData() {
+  //   return currentUser.add({'name': name});
+  // }
 
   void _getdata() async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -156,9 +154,11 @@ class _UserProfileState extends State<UserProfile> {
         .doc(user?.uid)
         .snapshots()
         .listen((userData) {
-      setState(() {
-        name = userData.data()!['name'];
-      });
+      if (this.mounted) {
+        setState(() {
+          name = userData.data()!['name'];
+        });
+      }
     });
   }
 
