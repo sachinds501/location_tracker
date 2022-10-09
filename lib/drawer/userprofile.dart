@@ -154,7 +154,7 @@ class _UserProfileState extends State<UserProfile> {
         .doc(user?.uid)
         .snapshots()
         .listen((userData) {
-      if (this.mounted) {
+      if (mounted) {
         setState(() {
           name = userData.data()!['name'];
         });

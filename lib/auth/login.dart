@@ -2,7 +2,6 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:location_tracker/auth/setdetails.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../home.dart';
@@ -35,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Something Went Wrong'));
           } else if (snapshot.hasData) {
-            return SetDetails();
+            return Home();
           } else {
             return SafeArea(
               child: Padding(
@@ -102,9 +101,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                               onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        OTPScreen(_controller.text)));
+                                if (_controller.text.length == 10) {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          OTPScreen(_controller.text)));
+                                }
                               },
                               child: const Text(
                                 'Next',
