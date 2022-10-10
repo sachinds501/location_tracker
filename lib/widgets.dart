@@ -34,7 +34,7 @@ Widget myfloatingButton(BuildContext context) {
           backgroundColor: Colors.orangeAccent,
           label: 'Join Group',
           onTap: () {
-            Navigator.of(context).push(SizeTransition5(JoinGroup()));
+            Navigator.of(context).push(SizeTransition5(const JoinGroup()));
           }),
     ],
   );
@@ -71,4 +71,8 @@ AppBar myAppBar(title) {
     title: Text(title),
     backgroundColor: const Color.fromARGB(255, 86, 96, 100),
   );
+}
+
+Color primaryColor() {
+  return const Color.fromARGB(255, 86, 96, 100);
 }

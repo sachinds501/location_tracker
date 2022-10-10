@@ -6,9 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:location/location.dart' as loc;
 import 'package:flutter/material.dart';
-import 'package:location_tracker/widgets.dart';
-
-import 'auth/login.dart';
+import 'package:location_tracker/group/group.dart';
 import 'drawer/drawer.dart';
 
 class Home extends StatefulWidget {
@@ -45,90 +43,39 @@ class _HomeState extends State<Home> {
         appBar: AppBar(
           title: const Text('Live Location Tracker'),
           backgroundColor: const Color.fromARGB(255, 86, 96, 100),
-       
           bottom: const TabBar(
-            tabs: [Tab(text: "Groups"), Tab(text: "Location status")],
+            tabs: [Tab(text: "GROUPS"), Tab(text: "LOCATION STATUS")],
           ),
         ),
-        body: Column(
+        body: TabBarView(
           children: [
-            // TextButton(
-            //     onPressed: () {
-            //       _getLocation();
-            //     },
-            //     child: Text('Add my location',
-            //         style: TextStyle(
-            //             color: Colors.blue[600],
-            //             fontSize: 18,
-            //             fontWeight: FontWeight.bold))),
-            TextButton(
-                onPressed: () {
-                  _listenLocation();
-                },
-                child: Text('Enable live location',
-                    style: TextStyle(
-                        color: Colors.green[600],
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold))),
-            TextButton(
-                onPressed: () {
-                  _stopListening();
-                },
-                child: Text('Stop live location',
-                    style: TextStyle(
-                        color: Colors.red[600],
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold))),
-            const Divider(
-              thickness: 2,
+            const ViewGroups(),
+            Column(
+              children: [
+                TextButton(
+                    onPressed: () {
+                      _listenLocation();
+                    },
+                    child: Text('Enable live location',
+                        style: TextStyle(
+                            color: Colors.green[600],
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold))),
+                TextButton(
+                    onPressed: () {
+                      _stopListening();
+                    },
+                    child: Text('Stop live location',
+                        style: TextStyle(
+                            color: Colors.red[600],
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold))),
+                const Divider(
+                  thickness: 2,
+                ),
+               
+              ],
             ),
-            Expanded(
-                child: StreamBuilder(
-              stream:
-                  FirebaseFirestore.instance.collection('location').snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                return ListView.builder(
-                    itemCount: snapshot.data?.docs.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          tileColor: Colors.grey[200],
-                          shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8))),
-                          title: Text("$name - $phone",
-                              style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold)),
-                          subtitle: Row(
-                            children: [
-                              Text(snapshot.data!.docs[index]
-                                  .get('latitude')
-                                  .toString()),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              Text(snapshot.data!.docs[index]
-                                  .get('longitude')
-                                  .toString()),
-                            ],
-                          ),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.directions),
-                            onPressed: () {
-                              // Navigator.of(context).push(MaterialPageRoute(
-                              //     builder: (context) =>
-                              //         MyMap(snapshot.data!.docs[index].id)));
-                            },
-                          ),
-                        ),
-                      );
-                    });
-              },
-            )),
           ],
         ),
       ),
@@ -163,7 +110,7 @@ class _HomeState extends State<Home> {
         .doc(user?.uid)
         .snapshots()
         .listen((userData) {
-      if (this.mounted) {
+      if (mounted) {
         setState(() {
           name = userData.data()?['name'];
         });

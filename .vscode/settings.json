@@ -1,5 +1,6 @@
 {
   "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
   "cmake.sourceDirectory": "${workspaceFolder}/linux",
-  "java.jdt.ls.java.home": "c:\\Program Files\\Eclipse Adoptium\\jdk-17.0.4.101-hotspot"
+  "java.jdt.ls.java.home": "c:\\Program Files\\Eclipse Adoptium\\jdk-17.0.4.101-hotspot",
+  "java.configuration.updateBuildConfiguration": "automatic"
 }
