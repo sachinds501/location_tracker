@@ -1,9 +1,9 @@
+// ignore_for_file: avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:location_tracker/group/view_group_members.dart';
-import 'package:velocity_x/velocity_x.dart';
-
 import '../widgets.dart';
 
 class ViewGroups extends StatefulWidget {
@@ -27,9 +27,9 @@ class _ViewGroupsState extends State<ViewGroups> {
     return Scaffold(
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection('location')
+            .collection('global_users')
             .doc(uid)
-            .collection('groups')
+            .collection('user_groups')
             .orderBy('group_name')
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -76,12 +76,12 @@ class _ViewGroupsState extends State<ViewGroups> {
   }
 
   CollectionReference currentUser =
-      FirebaseFirestore.instance.collection('location');
+      FirebaseFirestore.instance.collection('global_users');
 
   Future<void> _addData() async {
     return await currentUser
         .doc(uid)
-        .collection('groups')
+        .collection('user_groups')
         .doc()
         .set({
           'members': FieldValue.arrayUnion(checkPhoneNumeber(members: [])),

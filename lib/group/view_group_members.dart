@@ -2,7 +2,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:location_tracker/home.dart';
@@ -37,11 +36,16 @@ class ShowGroupMembersState extends State<ShowGroupMembers> {
         title: SizedBox(
           height: 66,
           child: ListTile(
+            trailing: const Icon(Icons.delete, color: Colors.red),
             contentPadding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
             onTap: () {
               Navigator.of(context).push(SizeTransition5(const Home()));
             },
-            title: widget.group_name!.text.xl.semiBold.white.make(),
+            title: widget.group_name!.text.xl
+                .overflow(TextOverflow.ellipsis)
+                .semiBold
+                .white
+                .make(),
             subtitle: 'Click to view group info'
                 .text
                 .size(14)
@@ -66,7 +70,8 @@ class ShowGroupMembersState extends State<ShowGroupMembers> {
         backgroundColor: primaryColor(),
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('location').snapshots(),
+        stream:
+            FirebaseFirestore.instance.collection('global_users').snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());

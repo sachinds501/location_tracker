@@ -23,8 +23,8 @@ class _SetDetailsState extends State<SetDetails> {
   @override
   void initState() {
     super.initState();
-    phone = FirebaseAuth.instance.currentUser!.phoneNumber;
-    uid = FirebaseAuth.instance.currentUser!.uid;
+    phone = FirebaseAuth.instance.currentUser?.phoneNumber;
+    uid = FirebaseAuth.instance.currentUser?.uid;
     _getdata();
   }
 
@@ -75,11 +75,11 @@ class _SetDetailsState extends State<SetDetails> {
   }
 
   CollectionReference currentUser =
-      FirebaseFirestore.instance.collection('location');
+      FirebaseFirestore.instance.collection('global_users');
 
   Future<void> _updateUser() {
     return currentUser
-        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .doc(FirebaseAuth.instance.currentUser?.uid)
         .update({'name': _nameController.text})
         .then((value) => print('User updated'))
         .catchError((error) => print('User not updated'));
@@ -105,7 +105,7 @@ class _SetDetailsState extends State<SetDetails> {
   void _getdata() async {
     User? user = FirebaseAuth.instance.currentUser;
     FirebaseFirestore.instance
-        .collection('location')
+        .collection('global_users')
         .doc(user?.uid)
         .snapshots()
         .listen((userData) {

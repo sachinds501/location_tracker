@@ -30,57 +30,52 @@ class _AppDrawerState extends State<AppDrawer> {
   Widget build(BuildContext context) {
     return Drawer(
       width: MediaQuery.of(context).size.width / 1.5,
-      child: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('location').snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          return SafeArea(
-            child: ListView(
-              children: [
-                UserAccountsDrawerHeader(
-                    currentAccountPicture: ClipOval(
-                      child: CircleAvatar(
-                          backgroundColor: Colors.grey[200],
-                          child: Image.asset(
-                            'assets/images/group.png',
-                            fit: BoxFit.cover,
-                          )),
-                    ),
-                    onDetailsPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => UserProfile()));
-                    },
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 86, 96, 100),
-                    ),
-                    accountName: Text(name.toString()),
-                    accountEmail: Text('$name@gmail.com'.toLowerCase())),
-                ListTile(
-                  title: Text('Join Group'),
-                  onTap: () {
-                    Navigator.of(context).push(SizeTransition5(JoinGroup()));
-                  },
+      child: SafeArea(
+        child: ListView(
+          children: [
+            UserAccountsDrawerHeader(
+                currentAccountPicture: ClipOval(
+                  child: CircleAvatar(
+                      backgroundColor: Colors.grey[200],
+                      child: Image.asset(
+                        'assets/images/group.png',
+                        fit: BoxFit.cover,
+                      )),
                 ),
-                ListTile(
-                  title: Text('Create Group'),
-                  onTap: () {
-                    Navigator.of(context).push(SizeTransition5(CreateGroup()));
-                  },
+                onDetailsPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => UserProfile()));
+                },
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 86, 96, 100),
                 ),
-                ListTile(
-                    leading: const Icon(Icons.logout),
-                    title: Text('Logout'),
-                    onTap: () async {
-                      await FirebaseAuth.instance.signOut();
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginScreen()),
-                          (route) => false);
-                    }),
-              ],
+                accountName: Text(name.toString()),
+                accountEmail: Text('$name@gmail.com'.toLowerCase())),
+            ListTile(
+              title: Text('Join Group'),
+              onTap: () {
+                Navigator.of(context).push(SizeTransition5(JoinGroup()));
+              },
             ),
-          );
-        },
+            ListTile(
+              title: Text('Create Group'),
+              onTap: () {
+                Navigator.of(context).push(SizeTransition5(CreateGroup()));
+              },
+            ),
+            ListTile(
+                leading: const Icon(Icons.logout),
+                title: Text('Logout'),
+                onTap: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()),
+                      (route) => false);
+                }),
+          ],
+        ),
       ),
     );
   }
@@ -89,12 +84,12 @@ class _AppDrawerState extends State<AppDrawer> {
     if (mounted) {
       User? user = FirebaseAuth.instance.currentUser;
       FirebaseFirestore.instance
-          .collection('location')
+          .collection('global_users')
           .doc(user?.uid)
           .snapshots()
           .listen((userData) {
         setState(() {
-          name = userData.data()!['name'];
+          name = userData.data()?['name'];
         });
       });
     }

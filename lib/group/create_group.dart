@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, avoid_print
 
 import 'dart:math';
 
@@ -70,6 +70,7 @@ class _CreateGroupState extends State<CreateGroup> {
                     group_id = randomAlphaNumeric(7,
                         provider: CoreRandomProvider.from(r));
                     _addData();
+                    mySnackBar(context, 'Group has been created');
                     Navigator.of(context).push(SizeTransition5(const Home()));
                   }
                   return null;
@@ -106,12 +107,12 @@ class _CreateGroupState extends State<CreateGroup> {
   }
 
   CollectionReference currentUser =
-      FirebaseFirestore.instance.collection('location');
+      FirebaseFirestore.instance.collection('global_users');
 
   Future<void> _addData() async {
     return await currentUser
         .doc(uid)
-        .collection('groups')
+        .collection('user_groups')
         .doc()
         .set({
           'group_name': _grpController.text,

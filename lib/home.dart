@@ -73,7 +73,6 @@ class _HomeState extends State<Home> {
                 const Divider(
                   thickness: 2,
                 ),
-               
               ],
             ),
           ],
@@ -89,7 +88,7 @@ class _HomeState extends State<Home> {
         _locationSubscription = null;
       });
     }).listen((loc.LocationData currentlocation) async {
-      await FirebaseFirestore.instance.collection('location').doc(uid).set({
+      await FirebaseFirestore.instance.collection('global_users').doc(uid).set({
         'latitude': currentlocation.latitude,
         'longitude': currentlocation.longitude,
       }, SetOptions(merge: true));
@@ -106,7 +105,7 @@ class _HomeState extends State<Home> {
   void _getdata() async {
     User? user = FirebaseAuth.instance.currentUser;
     FirebaseFirestore.instance
-        .collection('location')
+        .collection('global_users')
         .doc(user?.uid)
         .snapshots()
         .listen((userData) {
