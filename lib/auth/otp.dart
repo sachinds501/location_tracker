@@ -3,6 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:location_tracker/auth/setdetails.dart';
+import 'package:location_tracker/widgets.dart';
 import 'package:pinput/pinput.dart';
 
 class OTPScreen extends StatefulWidget {
@@ -22,9 +23,7 @@ class _OTPScreenState extends State<OTPScreen> {
     width: 56,
     height: 56,
     textStyle: const TextStyle(
-        fontSize: 20,
-        color: Color.fromRGBO(30, 60, 87, 1),
-        fontWeight: FontWeight.w600),
+        fontSize: 20, color: Colors.green, fontWeight: FontWeight.w600),
     decoration: BoxDecoration(
       border: Border.all(color: Colors.black),
       borderRadius: BorderRadius.circular(20),
@@ -35,6 +34,7 @@ class _OTPScreenState extends State<OTPScreen> {
     return Scaffold(
       key: _scaffoldkey,
       appBar: AppBar(
+        backgroundColor: primaryColor(),
         title: const Text('OTP Verification'),
       ),
       body: Column(

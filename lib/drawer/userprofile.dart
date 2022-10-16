@@ -148,18 +148,18 @@ class _UserProfileState extends State<UserProfile> {
   // }
 
   void _getdata() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    FirebaseFirestore.instance
-        .collection('location')
-        .doc(user?.uid)
-        .snapshots()
-        .listen((userData) {
-      if (mounted) {
+    if (mounted) {
+      User? user = FirebaseAuth.instance.currentUser;
+      FirebaseFirestore.instance
+          .collection('location')
+          .doc(user?.uid)
+          .snapshots()
+          .listen((userData) {
         setState(() {
           name = userData.data()!['name'];
         });
-      }
-    });
+      });
+    }
   }
 
   @override

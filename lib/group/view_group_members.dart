@@ -1,7 +1,10 @@
 // ignore_for_file: must_be_immutable, non_constant_identifier_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:location_tracker/home.dart';
 import 'package:location_tracker/mymap.dart';
 import 'package:location_tracker/widgets.dart';
@@ -11,11 +14,9 @@ class ShowGroupMembers extends StatefulWidget {
   final String? group_name;
   final String? group_id;
   const ShowGroupMembers(
-      {
-      required String this.group_name,
+      {required String this.group_name,
       required String this.group_id,
-      Key? key
-      })
+      Key? key})
       : super(key: key);
 
   @override
@@ -73,27 +74,31 @@ class ShowGroupMembersState extends State<ShowGroupMembers> {
           return ListView.builder(
               itemCount: snapshot.data?.docs.length,
               itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    elevation: 5,
-                    child: ListTile(
-                      tileColor: Colors.white,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      title: Text(
-                          snapshot.data!.docs[index].get('name').toString(),
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      subtitle: Text(
-                        snapshot.data!.docs[index].get('phone').toString(),
-                      ),
-                      leading: CircleAvatar(
-                        radius: 22,
-                        backgroundColor: Colors.transparent,
-                        child: Image.asset('assets/images/person.png'),
-                      ),
-                      trailing: IconButton(
+                return ListTile(
+                  tileColor: Colors.white,
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                  title: Text(snapshot.data!.docs[index].get('name').toString(),
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold)),
+                  subtitle: Text(
+                    snapshot.data!.docs[index].get('phone').toString(),
+                  ),
+                  leading: CircleAvatar(
+                    radius: 22,
+                    backgroundColor: Colors.transparent,
+                    child: Image.asset('assets/images/person.png'),
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                          onPressed: _callNumber,
+                          icon: const Icon(
+                            Icons.call,
+                            color: Colors.green,
+                          )),
+                      IconButton(
                         icon: const Icon(Icons.directions),
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
@@ -101,12 +106,18 @@ class ShowGroupMembersState extends State<ShowGroupMembers> {
                                   MyMap(snapshot.data!.docs[index].id)));
                         },
                       ),
-                    ),
+                    ],
                   ),
                 );
               });
         },
       ),
     );
+  }
+
+  _callNumber() async {
+    String number = FirebaseAuth.instance.currentUser!.phoneNumber
+        .toString(); //set the number here
+    bool? res = await FlutterPhoneDirectCaller.callNumber(number);
   }
 }

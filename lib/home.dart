@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:location/location.dart' as loc;
 import 'package:flutter/material.dart';
-import 'package:location_tracker/group/group.dart';
+import 'package:location_tracker/group/all_groups.dart';
 import 'drawer/drawer.dart';
 
 class Home extends StatefulWidget {

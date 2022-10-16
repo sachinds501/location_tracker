@@ -30,7 +30,6 @@ class _AppDrawerState extends State<AppDrawer> {
   Widget build(BuildContext context) {
     return Drawer(
       width: MediaQuery.of(context).size.width / 1.5,
-      // backgroundColor: const Color.fromARGB(255, 86, 96, 100),
       child: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('location').snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -38,6 +37,14 @@ class _AppDrawerState extends State<AppDrawer> {
             child: ListView(
               children: [
                 UserAccountsDrawerHeader(
+                    currentAccountPicture: ClipOval(
+                      child: CircleAvatar(
+                          backgroundColor: Colors.grey[200],
+                          child: Image.asset(
+                            'assets/images/group.png',
+                            fit: BoxFit.cover,
+                          )),
+                    ),
                     onDetailsPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => UserProfile()));
@@ -79,15 +86,17 @@ class _AppDrawerState extends State<AppDrawer> {
   }
 
   void _getdata() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    FirebaseFirestore.instance
-        .collection('location')
-        .doc(user?.uid)
-        .snapshots()
-        .listen((userData) {
-      setState(() {
-        name = userData.data()!['name'];
+    if (mounted) {
+      User? user = FirebaseAuth.instance.currentUser;
+      FirebaseFirestore.instance
+          .collection('location')
+          .doc(user?.uid)
+          .snapshots()
+          .listen((userData) {
+        setState(() {
+          name = userData.data()!['name'];
+        });
       });
-    });
+    }
   }
 }

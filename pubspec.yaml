@@ -43,7 +43,7 @@ dependencies:
   flutter_speed_dial: ^6.1.0+1
   velocity_x: ^3.5.1
   random_string: ^2.3.1
-
+  flutter_phone_direct_caller: ^2.1.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
