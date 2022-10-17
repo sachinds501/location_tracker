@@ -126,27 +126,29 @@ class _UserProfileState extends State<UserProfile> {
   CollectionReference currentUser =
       FirebaseFirestore.instance.collection('global_users');
 
-  Future<void> updateUser() {
-    return currentUser
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .update({'name': _nameController.text})
-        .then((value) => print('user updated'))
-        .catchError((error) => print('User not updated $error'));
+  Future<void> updateUser() async {
+    if (mounted) {
+      await currentUser
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({'name': _nameController.text})
+          .then((value) => print('user updated'))
+          .catchError((error) => print('User not updated $error'));
+    }
   }
 
-  void _getdata() async {
-    if (mounted) {
-      User? user = FirebaseAuth.instance.currentUser;
-      FirebaseFirestore.instance
-          .collection('global_users')
-          .doc(user?.uid)
-          .snapshots()
-          .listen((userData) {
+  Future<void> _getdata() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    FirebaseFirestore.instance
+        .collection('global_users')
+        .doc(user?.uid)
+        .snapshots()
+        .listen((userData) {
+      if (mounted) {
         setState(() {
           name = userData.data()?['name'];
         });
-      });
-    }
+      }
+    });
   }
 
   @override

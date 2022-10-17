@@ -71,7 +71,7 @@ class _ViewGroupsState extends State<ViewGroups> {
     );
   }
 
-  checkPhoneNumeber({required List<dynamic> members}) {
+  checkPhoneNumber({required List<dynamic> members}) {
     return members;
   }
 
@@ -84,7 +84,7 @@ class _ViewGroupsState extends State<ViewGroups> {
         .collection('user_groups')
         .doc()
         .set({
-          'members': FieldValue.arrayUnion(checkPhoneNumeber(members: [])),
+          'members': FieldValue.arrayUnion(checkPhoneNumber(members: [])),
         }, SetOptions(merge: true))
         .then((value) => print('New group created'))
         .catchError((error) => print('Error creating new group'));

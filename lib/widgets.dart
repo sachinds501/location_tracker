@@ -77,7 +77,7 @@ Color primaryColor() {
   return const Color.fromARGB(255, 86, 96, 100);
 }
 
-mySnackBar(context, String message) {
+mySnackBar(BuildContext context, String message) {
   var snackBar = SnackBar(
     content: Text(message),
     backgroundColor: Colors.white,
